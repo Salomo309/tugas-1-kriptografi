@@ -160,6 +160,11 @@ function decrypt(ciphertext, keyText) {
 
 }
 
+module.exports = {
+    encrypt,
+    decrypt,
+};
+
 
 // msg = 'temui ibu nanti malam';
 // key = 'JALAN GANESHA SEPULUH';

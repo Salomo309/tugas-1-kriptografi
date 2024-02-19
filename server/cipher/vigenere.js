@@ -71,6 +71,11 @@ function decrypt(plaintext, key) {
     return plaintext;
 }
 
+module.exports = {
+    encrypt,
+    decrypt
+};
+
 // plaintext = 'thisplaintext';
 // key = 'sony'
 // let encryptedplaintext = encrypt(plaintext, key);

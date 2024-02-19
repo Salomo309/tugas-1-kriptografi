@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 function App() {
   const [plaintext, setPlaintext] = useState("");
@@ -7,14 +8,28 @@ function App() {
   const [cipher, setCipher] = useState("vigenere");
   const [inputtype, setInputType] = useState("text");
 
-  const handleEncrypt = () => {
-    // const encrypted = encrypt(plaintext, key, cipher);
-    // setCiphertext(encrypted);
+  const handleEncrypt = async () => {
+    try {
+      const response = await axios.post(`/${cipher}/encrypt`, {
+        plaintext,
+        key,
+      });
+      setCiphertext(response.data);
+    } catch (error) {
+      console.error("Encryption failed:", error);
+    }
   };
 
-  const handleDecrypt = () => {
-    // const decrypted = decrypt(ciphertext, key, cipher);
-    // setPlaintext(decrypted);
+  const handleDecrypt = async () => {
+    try {
+      const response = await axios.post(`/${cipher}/decrypt`, {
+        encrypted: ciphertext,
+        key,
+      });
+      setCiphertext(response.data);
+    } catch (error) {
+      console.error("Encryption failed:", error);
+    }
   };
 
   return (
@@ -73,7 +88,7 @@ function App() {
           className="border p-2 rounded-md bg-gray-700 focus:ring-blue-500 focus:ring-opacity-50"
         >
           <option value="vigenere">Vigenere Cipher</option>
-          <option value="varianvigenere">Varian Vigenere Cipher</option>
+          <option value="autokeyvigenere">Auto-Key Vigenere Cipher</option>
           <option value="extendedvigenere">Extended Vigenere Cipher</option>
           <option value="playfair">Playfair Cipher</option>
           <option value="affine">Affine Cipher</option>

@@ -28,6 +28,11 @@ function decrypt(msg, key) {
     return plaintext;
 }
 
+module.exports = {
+    encrypt,
+    decrypt
+};
+
 let plainText = "Hello World!";
 let key = "key";
 
