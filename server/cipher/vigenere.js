@@ -48,10 +48,10 @@ function encrypt(plaintext, key) {
 }
 
 // decrypting function
-function decrypt(plaintext, key) {
+function decrypt(ciphertext, key) {
     let plaintext = '';
     let j = 0;
-    message = alphabeting(plaintext);
+    message = alphabeting(ciphertext);
 
     for (let i = 0; i < message.length; i++) {
         c = message.charAt(i);
@@ -71,8 +71,8 @@ function decrypt(plaintext, key) {
     return plaintext;
 }
 
-// plaintext = 'thisplaintext';
-// key = 'sony'
-// let encryptedplaintext = encrypt(plaintext, key);
-// console.log("Encrypted:", encryptedplaintext);
-// console.log("Decrypted:", decrypt(encryptedplaintext, key));
+plaintext = 'thisplaintext';
+key = 'sony'
+let encryptedplaintext = encrypt(plaintext, key);
+console.log("Encrypted:", encryptedplaintext);
+console.log("Decrypted:", decrypt(encryptedplaintext, key));
