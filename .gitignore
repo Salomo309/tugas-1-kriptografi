@@ -1,0 +1,40 @@
+# Dependency directories
+node_modules
+
+# Environment file
+.env
+
+# Built files
+/build
+/dist
+
+# Logs
+*.log
+
+# IDE files
+.vscode
+.idea
+
+# Mac OS files
+.DS_Store
+
+# npm debugging logs
+npm-debug.log*
+
+# Yarn logs
+yarn-debug.log*
+yarn-error.log*
+
+# Editor directories and files
+/.idea
+/.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# Windows thumbnail cache files
+Thumbs.db
+
+# macOS thumbnail cache files
+._*
