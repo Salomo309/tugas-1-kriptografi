@@ -75,6 +75,12 @@ function decrypt(ciphertext, m, b) {
     return plaintext;
 }
 
+module.exports = {
+    encrypt,
+    decrypt
+};
+
+
 let plaintext = 'kripto';
 let m = 5;
 let b = 8

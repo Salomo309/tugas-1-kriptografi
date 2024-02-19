@@ -86,6 +86,11 @@ function decrypt(plaintext, key) {
     return plaintext;
 }
 
+module.exports = {
+    encrypt,
+    decrypt
+};
+
 // msg = 'negarapenghasilminyakmentahdidunia';
 // key = 'indonegarapenghasilminyakmentahdid'
 // let encryptedMsg = encrypt(msg, key);
