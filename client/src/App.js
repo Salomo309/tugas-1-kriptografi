@@ -10,6 +10,87 @@ function App() {
   const [k, setK] = useState();
   const [cipher, setCipher] = useState("vigenere");
   const [inputtype, setInputType] = useState("text");
+  const [matrix, setMatrix] = useState([[0]]);
+
+  const addMatrixSize = () => {
+    const newMatrix = matrix.map((row) => [...row, 0]);
+    setMatrix([...newMatrix, Array(newMatrix[0].length).fill(0)]);
+  };
+
+  const removeMatrixSize = () => {
+    if (matrix.length > 1) {
+      const newMatrix = [...matrix];
+      newMatrix.pop();
+
+      const numColumns = newMatrix[0].length;
+      const updatedMatrix = newMatrix.map((row) =>
+        row.slice(0, numColumns - 1)
+      );
+
+      setMatrix(updatedMatrix);
+    }
+  };
+
+  const handleMatrixChange = (i, j, value) => {
+    const newMatrix = matrix.map((row, rowIndex) =>
+      row.map((col, colIndex) => {
+        if (rowIndex === i && colIndex === j) {
+          return value;
+        }
+        return col;
+      })
+    );
+    setMatrix(newMatrix);
+  };
+
+  const renderMatrixInputs = () => {
+    return (
+      <div className="matrix-inputs">
+        <div className="my-2">
+          <button
+            onClick={addMatrixSize}
+            className="px-4 py-2 bg-blue-500 text-white text-xl rounded-md mr-2"
+          >
+            +
+          </button>
+          <button
+            onClick={removeMatrixSize}
+            className="px-4 py-2 bg-red-500 text-white text-xl rounded-md mr-2"
+          >
+            -
+          </button>
+        </div>
+        {matrix.map((row, i) => (
+          <div key={i} className="flex">
+            {row.map((col, j) => (
+              <input
+                key={j}
+                type="text"
+                value={isNaN(matrix[i][j]) ? "" : matrix[i][j]} // Ensure NaN values are empty strings
+                onChange={(e) =>
+                  handleMatrixChange(
+                    i,
+                    j,
+                    e.target.value === "" ? 0 : parseInt(e.target.value)
+                  )
+                }
+                onKeyDown={(e) => {
+                  // Allow backspace and left/right arrow key
+                  if (e.key === "Backspace" || e.key === "ArrowLeft" || e.key === "ArrowRight") return;
+
+                  // Allow only numeric input
+                  if (!/[0-9]/.test(e.key)) {
+                    e.preventDefault();
+                  }
+                }}
+                className="w-12 h-12 text-center border-gray-500 border m-1 rounded-md bg-gray-700 focus:ring-blue-500 focus:ring-opacity-50"
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   const stringToBase64 = (str) => {
     // Convert the string to a byte array
@@ -46,6 +127,16 @@ function App() {
       } catch (error) {
         console.error("Encryption failed:", error);
       }
+    } else if (cipher === "hill") {
+      try {
+        const response = await axios.post(`/${cipher}/encrypt`, {
+          plaintext,
+          key: matrix,
+        });
+        setCiphertext(response.data);
+      } catch (error) {
+        console.error("Encryption failed:", error);
+      }
     } else if (cipher === "super") {
       try {
         const response = await axios.post(`/${cipher}/encrypt`, {
@@ -53,7 +144,6 @@ function App() {
           key,
           k: parseInt(k),
         });
-        console.log(response.data);
         setCiphertext(stringToBase64(response.data));
       } catch (error) {
         console.error("Encryption failed:", error);
@@ -80,6 +170,16 @@ function App() {
           encrypted: ciphertext,
           m: parseInt(m),
           b: parseInt(b),
+        });
+        setCiphertext(response.data);
+      } catch (error) {
+        console.error("Decryption failed:", error);
+      }
+    } else if (cipher === "hill") {
+      try {
+        const response = await axios.post(`/${cipher}/decrypt`, {
+          encrypted: ciphertext,
+          key: matrix,
         });
         setCiphertext(response.data);
       } catch (error) {
@@ -203,6 +303,15 @@ function App() {
               className="border p-2 rounded-md bg-gray-700 focus:ring-blue-500 focus:ring-opacity-50"
             />
           </div>
+        </div>
+      )}
+
+      {cipher === "hill" && (
+        <div className="flex flex-col mb-4">
+          <label htmlFor="key" className="mb-2 text-lg">
+            Key
+          </label>
+          {renderMatrixInputs()}
         </div>
       )}
 
