@@ -5,7 +5,7 @@ const PORT = process.env.PORT || 5000;
 
 const vigenereRoute = require("./routes/vigenere.route");
 const autoKeyVigenereRoute = require("./routes/autoKeyVigenere.route");
-// const extendedVigenereRoute = require("./routes/extendedVigenere.route");
+const extendedVigenereRoute = require("./routes/extendedVigenere.route");
 const playfairRoute = require("./routes/playfair.route");
 const affineRoute = require("./routes/affine.route");
 
@@ -28,6 +28,6 @@ app.get("/", (req, res) => {
 
 app.use("/vigenere", vigenereRoute);
 app.use("/autokeyvigenere", autoKeyVigenereRoute);
-// app.use("/extendedvigenere", extendedVigenereRoute);
+app.use("/extendedvigenere", extendedVigenereRoute);
 app.use("/playfair", playfairRoute);
 app.use("/affine", affineRoute);

@@ -3,7 +3,7 @@ function encrypt(plaintext, key) {
     let ciphertext = '';
     for (let i = 0, j = 0; i < plainText.length; i++) {
         let char = plainText.charCodeAt(i);
-        let keyCharCode = key.charCodeAt(j % key.length);
+        let keyChar = key.charCodeAt(j % key.length);
 
         let encryptedCharCode = (char + keyChar) % 256;
         ciphertext += String.fromCharCode(encryptedCharCode);

@@ -3,14 +3,14 @@ const router = express.Router();
 const { encrypt, decrypt } = require("../cipher/extendedVigenere");
 
 router.route("/encrypt").post(async (req, res, next) => {
-  const { plaintext, m, b } = req.body;
-  const ciphertext = encrypt(plaintext, m, b);
+  const { plaintext, key } = req.body;
+  const ciphertext = encrypt(plaintext, key);
   res.send(ciphertext);
 });
 
 router.route("/decrypt").post(async (req, res, next) => {
-  const { plaintext, m, b } = req.body;
-  const ciphertext = decrypt(plaintext, m, b);
+  const { encrypted, key } = req.body;
+  const ciphertext = decrypt(encrypted, key);
   res.send(ciphertext);
 });
 

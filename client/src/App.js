@@ -8,13 +8,38 @@ function App() {
   const [cipher, setCipher] = useState("vigenere");
   const [inputtype, setInputType] = useState("text");
 
+  const stringToBase64 = (str) => {
+    // Convert the string to a byte array
+    var byteArray = [];
+    for (var i = 0; i < str.length; ++i) {
+      byteArray.push(str.charCodeAt(i));
+    }
+    // Convert the byte array to a Base64 string
+    return btoa(String.fromCharCode.apply(null, byteArray));
+  };
+
+  const base64ToString = (base64) => {
+    // Decode the Base64 string
+    var decodedData = atob(base64);
+
+    // Convert the decoded byte array to a string
+    var str = "";
+    for (var i = 0; i < decodedData.length; ++i) {
+      str += String.fromCharCode(decodedData.charCodeAt(i) & 0xff);
+    }
+
+    return str;
+  };
+
   const handleEncrypt = async () => {
     try {
       const response = await axios.post(`/${cipher}/encrypt`, {
         plaintext,
         key,
       });
-      setCiphertext(response.data);
+      cipher === "extendedvigenere" || cipher === "super"
+        ? setCiphertext(stringToBase64(response.data))
+        : setCiphertext(response.data);
     } catch (error) {
       console.error("Encryption failed:", error);
     }
@@ -23,7 +48,10 @@ function App() {
   const handleDecrypt = async () => {
     try {
       const response = await axios.post(`/${cipher}/decrypt`, {
-        encrypted: ciphertext,
+        encrypted:
+          cipher === "extendedvigenere" || cipher === "super"
+            ? base64ToString(ciphertext)
+            : ciphertext,
         key,
       });
       setCiphertext(response.data);

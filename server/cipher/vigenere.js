@@ -81,8 +81,8 @@ module.exports = {
     decrypt
 };
 
-plaintext = 'thisplaintext';
-key = 'sony'
-let encryptedplaintext = encrypt(plaintext, key);
-console.log("Encrypted:", encryptedplaintext);
-console.log("Decrypted:", decrypt(encryptedplaintext, key));
+// plaintext = 'thisplaintext';
+// key = 'sony'
+// let encryptedplaintext = encrypt(plaintext, key);
+// console.log("Encrypted:", encryptedplaintext);
+// console.log("Decrypted:", decrypt(encryptedplaintext, key));
