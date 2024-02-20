@@ -1,5 +1,5 @@
 // encrypting function
-function encrypt(plaintext, key) {
+function encrypt(plainText, key) {
     let ciphertext = '';
     for (let i = 0, j = 0; i < plainText.length; i++) {
         let char = plainText.charCodeAt(i);
@@ -14,7 +14,7 @@ function encrypt(plaintext, key) {
 }
 
 // decrypting function
-function decrypt(msg, key) {
+function decrypt(encryptedText, key) {
     let plaintext = '';
     for (let i = 0, j = 0; i < encryptedText.length; i++) {
         let char = encryptedText.charCodeAt(i);
