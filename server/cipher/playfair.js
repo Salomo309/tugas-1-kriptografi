@@ -131,14 +131,15 @@ function encrypt(plaintext, keyText) {
 
 
 function decrypt(ciphertext, keyText) {
+    key = generateKey(keyText)
     let plaintext = '';
 
     for (let i = 0; i < ciphertext.length; i += 2) {
         let c1 = ciphertext.charAt(i);
         let c2 = ciphertext.charAt(i + 1);
 
-        let { row: row1, col: col1 } = findPos(keyText, c1);
-        let { row: row2, col: col2 } = findPos(keyText, c2);
+        let { row: row1, col: col1 } = findPos(key, c1);
+        let { row: row2, col: col2 } = findPos(key, c2);
 
         if (row1 === row2) {
             col1 = (col1 - 1 + 5) % 5;
@@ -172,10 +173,10 @@ module.exports = {
 // let ciphertext = encrypt(msg, key);
 // console.log(decrypt(ciphertext, key));
 
-let msg = 'satria saputra saragih';
-let key = 'JALAN GANESHA SEPULUH';
-// console.log(encrypt(msg, key));
-let encrypted = encrypt(msg, key);
-let decrypted = decrypt(encrypted, key);
-console.log(msg + ' -> ' +encrypted + " -> " + decrypted);
+// let msg = 'satria saputra saragih';
+// let key = 'JALAN GANESHA SEPULUH';
+// // console.log(encrypt(msg, key));
+// let encrypted = encrypt(msg, key);
+// let decrypted = decrypt(encrypted, key);
+// console.log(msg + ' -> ' +encrypted + " -> " + decrypted);
 

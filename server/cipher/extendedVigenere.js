@@ -1,9 +1,9 @@
 // encrypting function
-function encrypt(plaintext, key) {
+function encrypt(plainText, key) {
     let ciphertext = '';
     for (let i = 0, j = 0; i < plainText.length; i++) {
         let char = plainText.charCodeAt(i);
-        let keyCharCode = key.charCodeAt(j % key.length);
+        let keyChar = key.charCodeAt(j % key.length);
 
         let encryptedCharCode = (char + keyChar) % 256;
         ciphertext += String.fromCharCode(encryptedCharCode);
@@ -14,7 +14,7 @@ function encrypt(plaintext, key) {
 }
 
 // decrypting function
-function decrypt(msg, key) {
+function decrypt(encryptedText, key) {
     let plaintext = '';
     for (let i = 0, j = 0; i < encryptedText.length; i++) {
         let char = encryptedText.charCodeAt(i);
@@ -33,10 +33,10 @@ module.exports = {
     decrypt
 };
 
-let plainText = "Hello World!";
-let key = "key";
+// let plainText = "Hello World!";
+// let key = "key";
 
-let encryptedText = encrypt(plainText, key);
-console.log("Teks terenkripsi:", encryptedText);
-let decryptedText = decrypt(encryptedText, key);
-console.log("Teks terdekripsi:", decryptedText);
+// let encryptedText = encrypt(plainText, key);
+// console.log("Teks terenkripsi:", encryptedText);
+// let decryptedText = decrypt(encryptedText, key);
+// console.log("Teks terdekripsi:", decryptedText);

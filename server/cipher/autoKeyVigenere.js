@@ -62,11 +62,11 @@ function encrypt(plaintext, key) {
 }
 
 // decrypting function
-function decrypt(plaintext, key) {
+function decrypt(ciphertext, key) {
     let plaintext = '';
     let j = 0;
-    message = alphabeting(plaintext);
-    newKey = generateKey(plaintext, key);
+    message = alphabeting(ciphertext);
+    newKey = generateKey(ciphertext, key);
 
     for (let i = 0; i < message.length; i++) {
         c = message.charAt(i);
