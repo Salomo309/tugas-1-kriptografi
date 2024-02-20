@@ -7,6 +7,7 @@ function App() {
   const [key, setKey] = useState("");
   const [m, setM] = useState();
   const [b, setB] = useState();
+  const [k, setK] = useState();
   const [cipher, setCipher] = useState("vigenere");
   const [inputtype, setInputType] = useState("text");
 
@@ -41,9 +42,19 @@ function App() {
           m: parseInt(m),
           b: parseInt(b),
         });
-        cipher === "extendedvigenere" || cipher === "super"
-          ? setCiphertext(stringToBase64(response.data))
-          : setCiphertext(response.data);
+        setCiphertext(response.data);
+      } catch (error) {
+        console.error("Encryption failed:", error);
+      }
+    } else if (cipher === "super") {
+      try {
+        const response = await axios.post(`/${cipher}/encrypt`, {
+          plaintext,
+          key,
+          k: parseInt(k),
+        });
+        console.log(response.data);
+        setCiphertext(stringToBase64(response.data));
       } catch (error) {
         console.error("Encryption failed:", error);
       }
@@ -53,7 +64,7 @@ function App() {
           plaintext,
           key,
         });
-        cipher === "extendedvigenere" || cipher === "super"
+        cipher === "extendedvigenere"
           ? setCiphertext(stringToBase64(response.data))
           : setCiphertext(response.data);
       } catch (error) {
@@ -66,29 +77,37 @@ function App() {
     if (cipher === "affine") {
       try {
         const response = await axios.post(`/${cipher}/decrypt`, {
-          encrypted:
-            cipher === "extendedvigenere" || cipher === "super"
-              ? base64ToString(ciphertext)
-              : ciphertext,
+          encrypted: ciphertext,
           m: parseInt(m),
           b: parseInt(b),
         });
         setCiphertext(response.data);
       } catch (error) {
-        console.error("Encryption failed:", error);
+        console.error("Decryption failed:", error);
+      }
+    } else if (cipher === "super") {
+      try {
+        const response = await axios.post(`/${cipher}/decrypt`, {
+          encrypted: base64ToString(ciphertext),
+          key,
+          k: parseInt(k),
+        });
+        setCiphertext(response.data);
+      } catch (error) {
+        console.error("Decryption failed:", error);
       }
     } else {
       try {
         const response = await axios.post(`/${cipher}/decrypt`, {
           encrypted:
-            cipher === "extendedvigenere" || cipher === "super"
+            cipher === "extendedvigenere"
               ? base64ToString(ciphertext)
               : ciphertext,
           key,
         });
         setCiphertext(response.data);
       } catch (error) {
-        console.error("Encryption failed:", error);
+        console.error("Decryption failed:", error);
       }
     }
   };
@@ -158,7 +177,7 @@ function App() {
         </select>
       </div>
 
-      {cipher === "affine" ? (
+      {cipher === "affine" && (
         <div className="flex flex-row mb-4">
           <div className="flex flex-col mr-4">
             <label htmlFor="m" className="mb-2 text-lg">
@@ -185,7 +204,38 @@ function App() {
             />
           </div>
         </div>
-      ) : (
+      )}
+
+      {cipher === "super" && (
+        <div className="flex flex-row mb-4">
+          <div className="flex flex-col mr-4">
+            <label htmlFor="key" className="mb-2 text-lg">
+              key
+            </label>
+            <input
+              type="text"
+              id="key"
+              value={key}
+              onChange={(e) => setKey(e.target.value)}
+              className="border p-2 rounded-md bg-gray-700 focus:ring-blue-500 focus:ring-opacity-50"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label htmlFor="k" className="mb-2 text-lg">
+              k
+            </label>
+            <input
+              type="text"
+              id="k"
+              value={k}
+              onChange={(e) => setK(e.target.value)}
+              className="border p-2 rounded-md bg-gray-700 focus:ring-blue-500 focus:ring-opacity-50"
+            />
+          </div>
+        </div>
+      )}
+
+      {cipher !== "affine" && cipher !== "hill" && cipher !== "super" && (
         <div className="flex flex-col mb-4">
           <label htmlFor="key" className="mb-2 text-lg">
             Key
@@ -217,15 +267,9 @@ function App() {
 
       <div className="flex flex-col mb-4">
         <label htmlFor="ciphertext" className="mb-2 text-lg">
-          Cipher text:
+          Result:
         </label>
         {ciphertext}
-        {/* <textarea
-          id="ciphertext"
-          value={ciphertext}
-          onChange={(e) => setCiphertext(e.target.value)}
-          className="border p-2 rounded-md bg-gray-700 focus:ring-blue-500 focus:ring-opacity-50"
-        /> */}
       </div>
     </div>
   );

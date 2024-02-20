@@ -212,6 +212,11 @@ function decrypt(ciphertext, key) {
     return plaintext;
 }
 
+module.exports = {
+    encrypt,
+    decrypt,
+};
+
 // plaintext = 'hahahahahaha';
 // let key = [[17,17,5,3],[21,18,21,2],[2,2,19,2],[9,9,2,16]];
 // let encrypted = encrypt(plaintext, key);
