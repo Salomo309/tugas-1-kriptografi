@@ -33,10 +33,10 @@ module.exports = {
     decrypt
 };
 
-let plainText = "Hello World!";
-let key = "key";
+// let plainText = "Hello World!";
+// let key = "key";
 
-let encryptedText = encrypt(plainText, key);
-console.log("Teks terenkripsi:", encryptedText);
-let decryptedText = decrypt(encryptedText, key);
-console.log("Teks terdekripsi:", decryptedText);
+// let encryptedText = encrypt(plainText, key);
+// console.log("Teks terenkripsi:", encryptedText);
+// let decryptedText = decrypt(encryptedText, key);
+// console.log("Teks terdekripsi:", decryptedText);
