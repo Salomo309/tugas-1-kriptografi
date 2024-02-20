@@ -12,6 +12,27 @@ function App() {
   const [inputtype, setInputType] = useState("text");
   const [matrix, setMatrix] = useState([[0]]);
 
+  // Function to convert ciphertext to Blob
+  const ciphertextToBlob = () => {
+    const uint8Array = new TextEncoder().encode(ciphertext);
+    const ciphertextBlob = new Blob([uint8Array], {
+      type: "application/octet-stream",
+    });
+    return ciphertextBlob;
+  };
+
+  const downloadCiphertext = () => {
+    const blob = ciphertextToBlob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "ciphertext.bin";
+    document.body.appendChild(a);
+    a.click();
+    window.URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  };
+
   const addMatrixSize = () => {
     const newMatrix = matrix.map((row) => [...row, 0]);
     setMatrix([...newMatrix, Array(newMatrix[0].length).fill(0)]);
@@ -76,7 +97,12 @@ function App() {
                 }
                 onKeyDown={(e) => {
                   // Allow backspace and left/right arrow key
-                  if (e.key === "Backspace" || e.key === "ArrowLeft" || e.key === "ArrowRight") return;
+                  if (
+                    e.key === "Backspace" ||
+                    e.key === "ArrowLeft" ||
+                    e.key === "ArrowRight"
+                  )
+                    return;
 
                   // Allow only numeric input
                   if (!/[0-9]/.test(e.key)) {
@@ -359,26 +385,36 @@ function App() {
         </div>
       )}
 
-      <div className="flex gap-4 mb-4">
-        <button
-          onClick={handleEncrypt}
-          className="bg-blue-800 text-white py-2 px-4 rounded-md hover:bg-blue-900 active:ring-blue-800 active:ring-opacity-50"
-        >
-          Encrypt
-        </button>
-        <button
-          onClick={handleDecrypt}
-          className="bg-blue-400 text-white py-2 px-4 rounded-md hover:bg-blue-500 active:ring-blue-600 active:ring-opacity-50"
-        >
-          Decrypt
-        </button>
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <button
+            onClick={handleEncrypt}
+            className="bg-blue-800 text-white py-2 px-4 rounded-md hover:bg-blue-900 active:ring-blue-800 active:ring-opacity-50 mr-2"
+          >
+            Encrypt
+          </button>
+          <button
+            onClick={handleDecrypt}
+            className="bg-blue-400 text-white py-2 px-4 rounded-md hover:bg-blue-500 active:ring-blue-600 active:ring-opacity-50"
+          >
+            Decrypt
+          </button>
+        </div>
+        <div>
+          <button
+            onClick={downloadCiphertext}
+            className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 active:ring-green-600 active:ring-opacity-50"
+          >
+            Download Result
+          </button>
+        </div>
       </div>
 
       <div className="flex flex-col mb-4">
         <label htmlFor="ciphertext" className="mb-2 text-lg">
           Result:
         </label>
-        {ciphertext}
+        {ciphertext === "" ? "no result yet" : ciphertext}
       </div>
     </div>
   );
