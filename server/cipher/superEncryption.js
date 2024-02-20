@@ -98,10 +98,10 @@ module.exports = {
 };
 
 // Contoh penggunaan
-let plainText = "hellows";
-let key = "key";
-let k = 3;
-let encryptedText = encrypt(plainText.toLowerCase(), key.toLowerCase(), k);
-let decryptedText = decrypt(encryptedText, key, k);
-console.log("Ciphertext:", encryptedText);
-console.log("Plaintext:", decryptedText);
+// let plainText = "hellows";
+// let key = "key";
+// let k = 3;
+// let encryptedText = encrypt(plainText.toLowerCase(), key.toLowerCase(), k);
+// let decryptedText = decrypt(encryptedText, key, k);
+// console.log("Ciphertext:", encryptedText);
+// console.log("Plaintext:", decryptedText);
