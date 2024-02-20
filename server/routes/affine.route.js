@@ -9,8 +9,8 @@ router.route("/encrypt").post(async (req, res, next) => {
 });
 
 router.route("/decrypt").post(async (req, res, next) => {
-  const { plaintext, m, b } = req.body;
-  const ciphertext = decrypt(plaintext, m, b);
+  const { encrypted, m, b } = req.body;
+  const ciphertext = decrypt(encrypted, m, b);
   res.send(ciphertext);
 });
 
