@@ -26,27 +26,16 @@ function App() {
     // Create a Blob containing the ciphertext data
     const blob = ciphertextToBlob();
 
-    // Parse the header to extract file extension
-    const headers = ciphertext.split("\n");
-    let fileExtension = "dat"; // Default extension if not found
-    for (const header of headers) {
-      if (header.startsWith("Content-Disposition")) {
-        const match = header.match(/filename="(.+?)"/);
-        if (match && match[1]) {
-          const filenameParts = match[1].split(".");
-          if (filenameParts.length > 1) {
-            fileExtension = filenameParts.pop();
-          }
-        }
-        break; // No need to continue parsing headers once we've found the filename
-      }
-    }
-
     // Create a file name for download
     let fileName = "ciphertext";
-
-    // Append the original file extension to the file name
-    fileName += `.${fileExtension}`;
+    // Check if the file extension is available
+    if (fileExtension) {
+      // Append the original file extension to the file name
+      fileName += `.${fileExtension}`;
+    } else {
+      // If no file extension is available, use a default extension
+      fileName += ".dat";
+    }
 
     // Create a download link
     const url = window.URL.createObjectURL(blob);
