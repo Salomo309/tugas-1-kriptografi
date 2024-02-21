@@ -11,8 +11,8 @@ function App() {
   const [cipher, setCipher] = useState("vigenere");
   const [inputtype, setInputType] = useState("text");
   const [matrix, setMatrix] = useState([[0]]);
+  const [fileExtension, setFileExtension] = useState("");
 
-  // Function to convert ciphertext to Blob
   const ciphertextToBlob = () => {
     const uint8Array = new TextEncoder().encode(ciphertext);
     const ciphertextBlob = new Blob([uint8Array], {
@@ -22,15 +22,43 @@ function App() {
   };
 
   const downloadCiphertext = () => {
+    // Create a Blob containing the ciphertext data
     const blob = ciphertextToBlob();
+
+    // Create a file name for download
+    let fileName = "ciphertext";
+    // Check if the file extension is available
+    if (fileExtension) {
+      // Append the original file extension to the file name
+      fileName += `.${fileExtension}`;
+    } else {
+      // If no file extension is available, use a default extension
+      fileName += ".dat";
+    }
+
+    // Create a download link
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "ciphertext.bin";
+    a.download = fileName;
     document.body.appendChild(a);
     a.click();
     window.URL.revokeObjectURL(url);
     document.body.removeChild(a);
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      const contents = e.target.result;
+      setPlaintext(contents);
+    };
+    reader.readAsText(file);
+
+    // Extract and store the file extension
+    const extension = file.name.split(".").pop().toLowerCase();
+    setFileExtension(extension);
   };
 
   const addMatrixSize = () => {
@@ -278,6 +306,7 @@ function App() {
           <input
             type="file"
             id="file-input"
+            onChange={(e) => handleFileChange(e)}
             className="border p-2 rounded-md focus:ring-blue-500 focus:ring-opacity-50"
           />
         </div>
