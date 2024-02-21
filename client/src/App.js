@@ -12,11 +12,45 @@ function App() {
   const [inputtype, setInputType] = useState("text");
   const [matrix, setMatrix] = useState([[0]]);
   const [fileExtension, setFileExtension] = useState("");
-  // const [header, setHeader] = useState("");
+
+  const validateHeader = (ciphertext) => {
+    if (ciphertext.length < 4) {
+      console.error("Ciphertext is too short");
+      return false;
+    }
+
+    if (
+      ciphertext.charCodeAt(0) === 0xff &&
+      ciphertext.charCodeAt(1) === 0xd8
+    ) {
+      console.log("Header indicates JPEG format");
+      return true;
+    }
+
+    // PNG magic number: 0x89504E47
+    if (
+      ciphertext.charCodeAt(0) === 0x89 &&
+      ciphertext.charCodeAt(1) === 0x50 &&
+      ciphertext.charCodeAt(2) === 0x4e &&
+      ciphertext.charCodeAt(3) === 0x47
+    ) {
+      console.log("Header indicates PNG format");
+      return true;
+    }
+
+    console.error("Unknown file format");
+    return false;
+  };
 
   const ciphertextToBlob = () => {
-    const uint8Array = new TextEncoder().encode(ciphertext);
-    const ciphertextBlob = new Blob([uint8Array], {
+    // Convert the string to an array of bytes
+    const bytes = new Uint8Array(ciphertext.length);
+    for (let i = 0; i < ciphertext.length; i++) {
+      bytes[i] = ciphertext.charCodeAt(i);
+    }
+
+    // Create a Blob from the Uint8Array
+    const ciphertextBlob = new Blob([bytes], {
       type: "application/octet-stream",
     });
     return ciphertextBlob;
@@ -28,6 +62,7 @@ function App() {
 
     // Create a file name for download
     let fileName = "ciphertext";
+
     // Check if the file extension is available
     if (fileExtension) {
       // Append the original file extension to the file name
