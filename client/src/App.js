@@ -49,15 +49,34 @@ function App() {
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
+
+    if (!file) {
+      alert("Please select a file.");
+
+      e.target.value = null;
+
+      return;
+    }
+
     const reader = new FileReader();
+    const extension = file.name.split(".").pop().toLowerCase();
+
+    if (cipher !== "extendedvigenere" && cipher !== "super") {
+      if (extension !== "txt") {
+        alert("Please select a .txt file.");
+
+        e.target.value = null;
+
+        return;
+      }
+    }
+
     reader.onload = async (e) => {
       const contents = e.target.result;
       setPlaintext(contents);
     };
     reader.readAsText(file);
 
-    // Extract and store the file extension
-    const extension = file.name.split(".").pop().toLowerCase();
     setFileExtension(extension);
   };
 
@@ -208,7 +227,7 @@ function App() {
           plaintext,
           key,
         });
-        cipher === "extendedvigenere"
+        cipher === "extendedvigenerevigenere"
           ? setCiphertext(stringToBase64(response.data))
           : setCiphertext(response.data);
       } catch (error) {
