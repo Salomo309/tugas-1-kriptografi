@@ -12,6 +12,7 @@ function App() {
   const [inputtype, setInputType] = useState("text");
   const [matrix, setMatrix] = useState([[0]]);
   const [fileExtension, setFileExtension] = useState("");
+  // const [header, setHeader] = useState("");
 
   const ciphertextToBlob = () => {
     const uint8Array = new TextEncoder().encode(ciphertext);
@@ -25,16 +26,27 @@ function App() {
     // Create a Blob containing the ciphertext data
     const blob = ciphertextToBlob();
 
+    // Parse the header to extract file extension
+    const headers = ciphertext.split("\n");
+    let fileExtension = "dat"; // Default extension if not found
+    for (const header of headers) {
+      if (header.startsWith("Content-Disposition")) {
+        const match = header.match(/filename="(.+?)"/);
+        if (match && match[1]) {
+          const filenameParts = match[1].split(".");
+          if (filenameParts.length > 1) {
+            fileExtension = filenameParts.pop();
+          }
+        }
+        break; // No need to continue parsing headers once we've found the filename
+      }
+    }
+
     // Create a file name for download
     let fileName = "ciphertext";
-    // Check if the file extension is available
-    if (fileExtension) {
-      // Append the original file extension to the file name
-      fileName += `.${fileExtension}`;
-    } else {
-      // If no file extension is available, use a default extension
-      fileName += ".dat";
-    }
+
+    // Append the original file extension to the file name
+    fileName += `.${fileExtension}`;
 
     // Create a download link
     const url = window.URL.createObjectURL(blob);
@@ -52,21 +64,17 @@ function App() {
 
     if (!file) {
       alert("Please select a file.");
-
       e.target.value = null;
-
       return;
     }
 
     const reader = new FileReader();
-    const extension = file.name.split(".").pop().toLowerCase();
+    setFileExtension(file.name.split(".").pop().toLowerCase());
 
     if (cipher !== "extendedvigenere" && cipher !== "super") {
-      if (extension !== "txt") {
+      if (fileExtension !== "txt") {
         alert("Please select a .txt file.");
-
         e.target.value = null;
-
         return;
       }
     }
@@ -74,10 +82,17 @@ function App() {
     reader.onload = async (e) => {
       const contents = e.target.result;
       setPlaintext(contents);
+
+      try {
+        const response = await axios.post("/readheader", { header: contents });
+        setPlaintext(response.data);
+        // setHeader(response.data);
+        // console.log("Header (bytes):", header);
+      } catch (error) {
+        console.error("Error reading file header:", error);
+      }
     };
     reader.readAsText(file);
-
-    setFileExtension(extension);
   };
 
   const addMatrixSize = () => {
@@ -227,7 +242,7 @@ function App() {
           plaintext,
           key,
         });
-        cipher === "extendedvigenerevigenere"
+        cipher === "extendedvigenere"
           ? setCiphertext(stringToBase64(response.data))
           : setCiphertext(response.data);
       } catch (error) {
