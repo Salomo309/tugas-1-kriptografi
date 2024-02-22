@@ -19,7 +19,7 @@ function alphabeting(text) {
     let cleanText = '';
     for (let i = 0; i < text.length; i++) {
         if (isAlphabet(text[i])) {
-            cleanText += text[i];
+            cleanText += text[i].toLowerCase();
         }
     }
     return cleanText;
